@@ -1,8 +1,9 @@
 import type { Packet, PacketType } from ".";
-import type { Message } from "../peoplecat.d";
+import type { Message } from "../peoplecat";
 
 export type OutgoingPacket =
 	| Packet<PacketType.PING>
+	| Packet<PacketType.GET_CHAT_MEMBERSHIPS>
 	| Packet<
 			PacketType.ERROR,
 			{

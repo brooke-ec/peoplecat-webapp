@@ -10,6 +10,7 @@ export enum PacketType {
 	GET_MESSAGE_QUEUE = 6,
 	SEND_MESSAGE = 7,
 	NOTIFICATION_MESSAGE = 8,
+	GET_CHAT_MEMBERSHIPS = 17,
 }
 
 /** Base payload all packets extend */
@@ -19,6 +20,7 @@ export interface Packet<
 > {
 	type: T;
 	payload: P;
+	final?: boolean;
 }
 
 /**
@@ -29,7 +31,7 @@ export interface Packet<
 export function encode(packet: Packet): Uint8Array {
 	const bb = new ByteBuffer()
 		.writeUint32(packet.type)
-		.writeUint8(1)
+		.writeUint8(packet.final === undefined ? 1 : packet.final ? 1 : 0)
 		.writeIString(packet.payload ? JSON.stringify(packet.payload) : "");
 	return bb.buffer;
 }
@@ -44,5 +46,5 @@ export function decode(buffer: Parameters<typeof ByteBuffer.wrap>[0]): Packet {
 	const type: PacketType = bb.readUint32();
 	const final = Boolean(bb.readUint8());
 	const payload = bb.readIString();
-	return { type, payload: payload.length === 0 ? undefined : JSON.parse(payload) };
+	return { type, final, payload: payload.length === 0 ? undefined : JSON.parse(payload) };
 }

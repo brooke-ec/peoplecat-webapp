@@ -19,3 +19,12 @@ export interface User {
 	/** The path to the current user's profile picture from `https://data.nathcat.net/pfps` */
 	pfpPath: string;
 }
+
+export interface Chat {
+	chatId: number;
+	name: string;
+	keyId: string;
+	joinCode: string;
+	icon: string;
+	key: JsonWebKey;
+}

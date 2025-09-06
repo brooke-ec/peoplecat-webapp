@@ -3,12 +3,6 @@ import type { User } from "./cache.svelte";
 import { env } from "$env/dynamic/public";
 
 /**
- * Checks if the current url is on a different origin than AuthCat
- * @returns `true` if the current url is CORS
- */
-export const isCORS = () => !window.location.host.endsWith(env.PUBLIC_AUTHCAT_DOMAIN);
-
-/**
  * Gets the AuthCat session cookie from the current browser
  * @returns The `AuthCat-SSO` cookie.
  */

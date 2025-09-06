@@ -1,4 +1,4 @@
-import type { Message, User } from "../peoplecat.d";
+import type { Chat, Message, User } from "../peoplecat";
 import type { Packet, PacketType } from ".";
 
 export type IncomingPacket =
@@ -24,4 +24,5 @@ export type IncomingPacket =
 				chatId: number;
 				message: Message;
 			}
-	  >;
+	  >
+	| Packet<PacketType.GET_CHAT_MEMBERSHIPS, Chat>;

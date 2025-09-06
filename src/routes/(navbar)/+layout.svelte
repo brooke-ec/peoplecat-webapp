@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 	import MobileNavbar from "./MobileNavbar.svelte";
+	import { elements } from "./Titlebar.svelte";
 	import Navbar from "./Navbar.svelte";
 	import Fa from "svelte-fa";
-	import { elements } from "./Titlebar.svelte";
 
 	let { children } = $props();
 

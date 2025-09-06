@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { isCORS, logout as acLogout, getCookie } from "$lib/application/authcat";
+	import { logout as acLogout, getCookie } from "$lib/application/authcat";
 	import ProfilePicture from "$lib/components/profile/ProfilePicture.svelte";
 	import { application } from "$lib/application/application.svelte";
 	import Settings from "$lib/application/settings.svelte";
@@ -20,7 +20,7 @@
 	let notificationPermission = $state(Notification.permission);
 
 	function logout() {
-		(isCORS() ? action("logout") : acLogout(getCookie()!))
+		action("logout")
 			.then(() => application.authenticate())
 			.catchToast("Log Out Failed")
 			.loading();

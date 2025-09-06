@@ -3,10 +3,9 @@
 	import { createForm, type FelteSubmitError } from "felte";
 	import { validator } from "@felte/validator-zod";
 	import type { Extender } from "@felte/common";
-	import { env } from "$env/dynamic/public";
 	import { toast } from "$lib/util.svelte";
-	import { page } from "$app/stores";
 	import { goto } from "$lib/util.svelte";
+	import { page } from "$app/stores";
 	import { z } from "zod";
 
 	const schema = z.object({
@@ -46,11 +45,7 @@
 <div class="container">
 	<div class="heading">
 		<h1>AuthCat Login</h1>
-		<p class="reason">
-			You are seeing this page as you are not connected to a
-			<span class="code">{env.PUBLIC_AUTHCAT_DOMAIN}</span>
-			subdomain
-		</p>
+		<p class="reason">PeopleCat uses your AuthCat password to encrypt your messages.</p>
 	</div>
 	<form class="island login" method="POST" use:form>
 		<input name="username" type="text" placeholder="Enter your Username" />

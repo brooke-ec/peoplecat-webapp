@@ -18,6 +18,7 @@ export function persist<T>(key: string): { value: T | undefined };
  * @param initial Initial value if unset in `localStorage`
  */
 export function persist<T>(key: string, initial: T): { value: T };
+
 export function persist<T>(key: string, initial?: T) {
 	const stored = browser ? localStorage.getItem(key) : "null";
 	let value = $state<T>(stored === null ? initial : JSON.parse(stored));

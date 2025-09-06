@@ -1,9 +1,9 @@
 import notificationSfx from "$lib/assets/notification.mp3";
 import Settings from "$lib/application/settings.svelte";
-import { getCookie, isCORS } from "./authcat";
+import type { Message, User } from "./peoplecat";
+import { getCookie } from "./authcat";
 import { env } from "$env/dynamic/public";
 import { toast } from "$lib/util.svelte";
-import type { Message, User } from "./peoplecat";
 import { goto } from "$lib/util.svelte";
 import {
 	type IncomingPacket,
@@ -14,7 +14,7 @@ import {
 	encode,
 } from "./packet";
 
-import Cache, { ApplicationCache } from "./cache.svelte";
+import Cache from "./cache.svelte";
 
 /**
  * Represents an instance of the application.
@@ -22,8 +22,6 @@ import Cache, { ApplicationCache } from "./cache.svelte";
  * Contains shared applciation data and functions.
  */
 export class Application {
-	public cache = new ApplicationCache();
-
 	public user: null | User = null;
 	public loaded = $state(false);
 
@@ -42,7 +40,7 @@ export class Application {
 	public connect() {
 		if (this.socket) throw new Error("Attempted to overwrite socket");
 
-		this.socket = new WebSocket(env.PUBLIC_BACKEND_URL!);
+		this.socket = new WebSocket(env.PUBLIC_BACKEND_URL);
 		this.socket.addEventListener("message", (m) => this.recieve(m));
 
 		this.socket.addEventListener("open", async () => {
@@ -79,12 +77,8 @@ export class Application {
 					description: packet.payload.msg,
 				});
 				break;
-			case PacketType.GET_MESSAGE_QUEUE:
-				if ("messageCount" in packet.payload) break;
-				this.cache.pushMessage(packet.payload);
-				break;
 			case PacketType.NOTIFICATION_MESSAGE:
-				this.cache.pushMessage(packet.payload.message);
+				Cache.messages.push(packet.payload.message.chatId, packet.payload.message);
 				if (
 					this.user?.id !== packet.payload.message.senderId &&
 					Settings.notification.value == "browser"
@@ -99,7 +93,9 @@ export class Application {
 
 	private async createNotification(message: Message) {
 		const author = await Cache.users.fetch(message.senderId);
-		const chat = this.cache.chats[message.chatId];
+
+		const chat = Cache.chats.get()?.[message.chatId];
+		if (!chat) return;
 
 		new Audio(notificationSfx).play();
 		new Notification(`${author.fullName} (${chat.name})`, {
@@ -137,12 +133,7 @@ export class Application {
 
 		// Log in
 		const search = `return-page=${encodeURIComponent(window.location.href)}`;
-		if (isCORS()) {
-			if (!window.location.pathname.endsWith("login")) await goto(`/login?${search}`);
-		} else {
-			const l = `${env.PUBLIC_AUTHCAT_URL}?${search}`;
-			window.location.assign(l);
-		}
+		if (!window.location.pathname.endsWith("login")) await goto(`/login?${search}`);
 	}
 
 	/**
@@ -155,6 +146,20 @@ export class Application {
 		return new Promise<Packet>((resolve, reject) => {
 			this.waiting[type].push({ resolve, reject });
 		});
+	}
+
+	/**
+	 * Recieve all packets in the next {@link PacketType} stream of a given type
+	 * @param type The type of packet to stream
+	 * @returns The collected packets in the stream
+	 */
+	public async stream<T extends PacketType>(
+		type: T,
+	): Promise<Extract<IncomingPacket, Packet<T>>[]> {
+		const result = [];
+		do result.push(await this.waitFor(type));
+		while (!result[result.length - 1].final);
+		return result;
 	}
 }
 

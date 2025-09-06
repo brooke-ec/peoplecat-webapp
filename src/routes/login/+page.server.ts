@@ -4,11 +4,15 @@ import * as cookie from "cookie";
 
 export const actions = {
 	default: async ({ request, cookies }) => {
-		const body = await request.formData();
+		const data = await request.formData();
 
 		const { response } = await acFetchJSON("sso/try-login.php", {
 			method: "POST",
-			body,
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				username: data.get("username"),
+				password: data.get("password"),
+			}),
 		}).catch((e) => error(500, `${e}`));
 
 		const session = response.headers
