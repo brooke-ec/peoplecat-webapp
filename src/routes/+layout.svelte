@@ -1,33 +1,37 @@
 <script lang="ts">
 	import { application } from "$lib/application/application.svelte";
-	import { isIos } from "@melt-ui/svelte/internal/helpers";
-	import Settings from "$lib/application/settings.svelte";
-	import { browser, dev } from "$app/environment";
+	import { dev } from "$app/environment";
+	import Freeze from "./Freeze.svelte";
 	import Loading from "./Loading.svelte";
 	import Toaster from "./Toaster.svelte";
-	import Freeze from "./Freeze.svelte";
+	import { onMount } from "svelte";
 
 	let { children } = $props();
 
 	import "greset";
 	import "$lib/style.scss";
+	import { isIos } from "@melt-ui/svelte/internal/helpers";
+	import Settings from "$lib/application/settings.svelte";
 
-	if (browser) {
+	onMount(() => {
 		application.connect();
 
 		// @ts-ignore
 		if (dev) window.application = application;
-	}
+	});
 </script>
 
 <div data-sveltekit-replacestate={isIos()} style:--bottom-spacing="{Settings.spacing.value}px">
 	<Toaster />
-	<Loading />
 	<Freeze />
+	<Loading />
 
-	<main>
-		{@render children()}
-	</main>
+	<!-- Only render page when loading is complete -->
+	{#if application.loaded}
+		<main>
+			{@render children()}
+		</main>
+	{/if}
 </div>
 
 <style lang="scss">

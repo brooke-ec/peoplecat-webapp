@@ -1,5 +1,5 @@
 import * as cookie from "cookie";
-import type { User } from "./cache.svelte";
+import type { User } from "./peoplecat";
 import { env } from "$env/dynamic/public";
 
 /**
