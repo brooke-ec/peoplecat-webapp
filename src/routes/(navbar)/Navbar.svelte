@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { faCog } from "@fortawesome/free-solid-svg-icons";
 	import Cache from "$lib/application/cache.svelte";
+	import { env } from "$env/dynamic/public";
 	import { page } from "$app/stores";
 	import Fa from "svelte-fa";
 </script>
@@ -8,7 +9,10 @@
 <div class="container">
 	{#each Object.values(Cache.chats.get() ?? {}) as chat}
 		<a href="/chat/{chat.chatId}" class:selected={$page.url.pathname == `/chat/${chat.chatId}`}>
-			<div class="icon" style="background-image: url({chat.icon})"></div>
+			<div
+				class="icon"
+				style="background-image: url({env.PUBLIC_AUTHCAT_URL}pfps/{chat.icon})"
+			></div>
 			<span>{chat.name}</span>
 		</a>
 	{/each}
