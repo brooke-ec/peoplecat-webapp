@@ -1,5 +1,5 @@
 export interface Message {
-	/** The chat id this message belongs to */
+	/** The chat ID this message belongs to */
 	chatId: number;
 	/** The text content of this message */
 	content: string;
@@ -10,7 +10,7 @@ export interface Message {
 }
 
 export interface User {
-	/** The ID of the currently user */
+	/** The ID of the user */
 	id: number;
 	/** The username of the current user */
 	username: string;
@@ -21,10 +21,16 @@ export interface User {
 }
 
 export interface Chat {
+	/** Tht ID of the chat */
 	chatId: number;
+	/** The name of the chat */
 	name: string;
+	/** Unknown */
 	keyId: string;
+	/** The code users can use to join this public chat */
 	joinCode: string;
+	/** The icon of this chat */
 	icon: string;
+	/* The key used to encrypt messages sent in this chat  */
 	key: JsonWebKey;
 }

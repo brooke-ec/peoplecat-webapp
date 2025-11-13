@@ -1,0 +1,26 @@
+{
+	"name": "@peoplecat/sdk",
+	"version": "0.0.1",
+	"description": "A library for interacting with the PeopleCat server",
+	"main": "./lib/index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "tsc",
+		"lint": "tslint -c tslint.json src/**/*.ts",
+		"prepublish": "pnpm run build"
+	},
+	"author": {
+		"name": "brooke-ec",
+		"url": "https://brooke.ec"
+	},
+	"license": "MIT",
+	"dependencies": {
+		"tslint": "^5.20.1",
+		"typescript": "^5.9.3"
+	},
+	"files": [
+		"./bin/*",
+		"./lib/*"
+	],
+	"typings": "./lib/index.d.ts"
+}
