@@ -1,0 +1,7 @@
+{
+	"name": "@peoplecat/monorepo",
+	"private": true,
+	"scripts": {
+		"dev": "pnpm --filter web -r dev"
+	}
+}
