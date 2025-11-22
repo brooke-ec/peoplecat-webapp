@@ -10,6 +10,9 @@ importers:
 
   packages/sdk:
     dependencies:
+      bytebuffer:
+        specifier: ^5.0.1
+        version: 5.0.1
       tslint:
         specifier: ^5.20.1
         version: 5.20.1(typescript@5.9.3)
